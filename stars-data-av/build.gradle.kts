@@ -25,6 +25,11 @@ mavenMetadata {
 
 dependencies {
   implementation(project(":stars-core"))
+  implementation(project(":stars-logic-mtcq"))
+  implementation(files("../stars-logic-mtcq/lib/openllet-distribution-2.6.6-SNAPSHOT.jar")) // Topllet
+  implementation("org.antlr:antlr4-runtime:4.13.1") // required by Topllet for parsing MTCQs
+  implementation("com.googlecode.lanterna:lanterna:3.1.2") // required by Topllet (streaming version)
+  implementation(kotlin("reflect"))
   testImplementation(project(":stars-logic-kcmftbl"))
 }
 

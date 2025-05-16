@@ -15,25 +15,15 @@
  * limitations under the License.
  */
 
-package tools.aqua.stars.data.av.dataclasses
+plugins { id("tools.aqua.stars.library-conventions") }
 
-import openllet.core.KnowledgeBase
-import openllet.core.utils.TermFactory.term
-import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.logic.mtcq.DLConvertible
+mavenMetadata {
+  name.set("STARS Kotlin MTCQ")
+  description.set(
+      "STARS - Scenario-Based Testing of Autonomous Robotic Systems - Library for Kotlin implementation of MTCQ")
+}
 
-/** Abstract actor data class. */
-sealed class Actor :
-    DLConvertible, EntityType<Actor, TickData, Segment, TickDataUnitSeconds, TickDataDifferenceSeconds> {
-
-  /**
-   * Clones the actor.
-   *
-   * @param newTickData New [TickData] to copy to new object.
-   */
-  abstract fun clone(newTickData: TickData): Actor
-
-  override fun addToKB(kb: KnowledgeBase) {
-    kb.addIndividual(term("Actor_" + id))
-  }
+dependencies {
+  implementation(project(":stars-core"))
+  implementation(files("lib/openllet-distribution-2.6.6-SNAPSHOT.jar"))
 }
