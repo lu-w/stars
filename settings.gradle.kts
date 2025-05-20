@@ -20,6 +20,7 @@ rootProject.name = "stars"
 include(
     "stars-core",
     "stars-logic-kcmftbl",
+    "stars-logic-mtcq",
     "stars-data-av",
     "stars-importer-carla",
 )

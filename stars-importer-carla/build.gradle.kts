@@ -29,6 +29,7 @@ mavenMetadata {
 dependencies {
   implementation(project(":stars-core"))
   implementation(project(":stars-data-av"))
+  implementation(project(":stars-logic-mtcq"))
   testImplementation(project(":stars-data-av", "test"))
   implementation(libs.kotlinx.serialization.json)
 }

@@ -17,8 +17,6 @@
 
 package tools.aqua.stars.logic.mtcq
 
-import openllet.mtcq.engine.MTCQNormalFormEngine
-import openllet.mtcq.parser.MetricTemporalConjunctiveQueryParser
 import tools.aqua.stars.core.evaluation.PredicateContext
 import tools.aqua.stars.core.types.*
 
@@ -29,13 +27,9 @@ fun <
         U : TickUnit<U, D>,
         D : TickDifference<D>> mtcq(
     context: PredicateContext<E, T, S, U, D>,
-    converter: DLConverter<E, T, S, U, D>,
-    mtcqString: String
+    mtcqString: String,
+    mtcqEvaluator: MTCQEvaluator<E, T, S, U, D>
 ): Boolean {
-    val tkb = converter.toTKB(context.segment)
-    val mtcq = MetricTemporalConjunctiveQueryParser.parse(mtcqString, tkb)
-    println("MTCQ eval called for TKB of size " + tkb.size)
-    val eng = MTCQNormalFormEngine()
-    val res = eng.exec(mtcq)
+    val res = mtcqEvaluator.eval(context.segment, mtcqString)
     return !res.isEmpty
 }
