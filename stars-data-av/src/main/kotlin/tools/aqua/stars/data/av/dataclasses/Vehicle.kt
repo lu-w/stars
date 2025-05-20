@@ -117,8 +117,13 @@ data class Vehicle(
   }
 
   override fun addToKB(kb: KnowledgeBase) {
+    val veh = term("Vehicle")
+    kb.addClass(veh)
+    val pos = term("positionOnLane")
+    kb.addDatatypeProperty(pos)
     val ind = term("Vehicle_" + id)
     kb.addIndividual(ind)
-    kb.addPropertyValue(ind, term("positionOnLane"), literal(positionOnLane))
+    kb.addType(ind, veh)
+    kb.addPropertyValue(pos, ind, literal(positionOnLane))
   }
 }

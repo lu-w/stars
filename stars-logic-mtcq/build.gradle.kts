@@ -26,4 +26,5 @@ mavenMetadata {
 dependencies {
   implementation(project(":stars-core"))
   implementation(files("lib/openllet-distribution-2.6.6-SNAPSHOT.jar"))
+  implementation("javax.xml.bind:jaxb-api:2.3.1")
 }

@@ -24,9 +24,11 @@ class MTCQEvaluator<
     fun eval(segment: S, mtcqString: String): QueryResult {
         val tkb = toTKB(segment)
         val mtcq = MetricTemporalConjunctiveQueryParser.parse(mtcqString, tkb)
-        println("MTCQ eval called for TKB of size " + tkb.size)
+        println("MTCQ evaluation called for TKB of size " + tkb.size)
         val eng = MTCQNormalFormEngine()
-        return eng.exec(mtcq)
+        val res = eng.exec(mtcq)
+        println("Result is: $res")
+        return res
     }
 
     private fun toTKB(segment: S): TemporalKnowledgeBase {
