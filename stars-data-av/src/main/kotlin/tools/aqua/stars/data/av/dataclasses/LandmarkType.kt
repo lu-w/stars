@@ -17,11 +17,14 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+import DLConvertible
+
 /**
  * Data class for [Landmark] types.
  *
  * @property value Internal json value.
  */
+@DLConvertible
 enum class LandmarkType(val value: Int) {
   Danger(101),
   LanesMerging(121),

@@ -17,6 +17,8 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+import DLConvertible
+
 /**
  * Data class for speed limits.
  *
@@ -24,6 +26,7 @@ package tools.aqua.stars.data.av.dataclasses
  * @property fromDistanceFromStart Distance from the start of speed limit start.
  * @property toDistanceFromStart Distance from the start of speed limit end.
  */
+@DLConvertible
 data class SpeedLimit(
     val speedLimit: Double,
     val fromDistanceFromStart: Double,

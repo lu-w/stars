@@ -17,6 +17,8 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+import DLConvertible
+
 /**
  * Data class for traffic lights.
  *
@@ -25,6 +27,7 @@ package tools.aqua.stars.data.av.dataclasses
  * @property relatedOpenDriveId The related open drive identifier.
  * @see StaticTrafficLight
  */
+@DLConvertible
 data class TrafficLight(var id: Int, var state: TrafficLightState, val relatedOpenDriveId: Int) {
   override fun toString(): String = "TrafficLight($id, $state)"
 }

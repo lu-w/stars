@@ -17,6 +17,8 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+import DLConvertible
+
 /**
  * Data class for static traffic lights.
  *
@@ -26,6 +28,7 @@ package tools.aqua.stars.data.av.dataclasses
  * @property stopLocations List of stop locations as [Location]s.
  * @see TrafficLight
  */
+@DLConvertible
 data class StaticTrafficLight(
     var id: Int,
     val location: Location,

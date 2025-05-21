@@ -17,7 +17,10 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+import DLConvertible
+
 /** Enum for vehicle types. */
+@DLConvertible
 enum class VehicleType {
   CAR,
   TRUCK,

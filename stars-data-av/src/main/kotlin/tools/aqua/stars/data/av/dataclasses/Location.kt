@@ -17,6 +17,7 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+import DLConvertible
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -28,6 +29,7 @@ import kotlin.math.sqrt
  * @property z The z ordinate.
  * @see Vector3D
  */
+@DLConvertible
 data class Location(val x: Double, val y: Double, val z: Double) {
   companion object {
     /**

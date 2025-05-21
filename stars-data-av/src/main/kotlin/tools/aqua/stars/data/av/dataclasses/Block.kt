@@ -17,6 +17,8 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+import DLConvertible
+
 /**
  * Data class for [Road] blocks.
  *
@@ -24,6 +26,7 @@ package tools.aqua.stars.data.av.dataclasses
  * @property id Identifier of the road block.
  * @property roads Roads incorporated in this block.
  */
+@DLConvertible
 data class Block(
     val fileName: String,
     val id: String,

@@ -17,6 +17,7 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+import DLConvertible
 import kotlin.math.sqrt
 
 /**
@@ -26,6 +27,7 @@ import kotlin.math.sqrt
  * @property y The y ordinate.
  * @property z The z ordinate.
  */
+@DLConvertible
 data class Vector3D(val x: Double, val y: Double, val z: Double) {
   constructor(vector: Vector3D) : this(vector.x, vector.y, vector.z)
 

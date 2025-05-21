@@ -17,11 +17,14 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+import DLConvertible
+
 /**
  * Enum for traffic light states.
  *
  * @property value Internal json value.
  */
+@DLConvertible
 enum class TrafficLightState(val value: Int) {
   Red(0),
   Yellow(1),

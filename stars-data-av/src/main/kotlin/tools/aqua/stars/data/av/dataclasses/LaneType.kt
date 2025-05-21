@@ -17,11 +17,14 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+import DLConvertible
+
 /**
  * Data class for [Lane] types.
  *
  * @property value Internal json value.
  */
+@DLConvertible
 enum class LaneType(val value: Int) {
   Any(-2),
   Bidirectional(512),

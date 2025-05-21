@@ -17,11 +17,14 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+import DLConvertible
+
 /**
  * Data class for contact lane info.
  *
  * @property lane The [Lane].
  */
+@DLConvertible
 data class ContactLaneInfo(
     val lane: Lane,
 )

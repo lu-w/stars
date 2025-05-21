@@ -17,6 +17,8 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+import DLConvertible
+
 /**
  * Data class for landmarks.
  *
@@ -32,6 +34,7 @@ package tools.aqua.stars.data.av.dataclasses
  * @property location The [Location] of the landmark.
  * @property rotation The [Rotation] of the landmark.
  */
+@DLConvertible
 data class Landmark(
     val id: Int,
     val name: String,

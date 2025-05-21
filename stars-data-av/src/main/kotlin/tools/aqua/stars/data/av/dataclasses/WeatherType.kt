@@ -17,7 +17,10 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+import DLConvertible
+
 /** Enum for weather types. */
+@DLConvertible
 enum class WeatherType {
   Clear,
   Cloudy,

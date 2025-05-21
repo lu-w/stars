@@ -17,6 +17,8 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+import DLConvertible
+
 /**
  * Data class for rotations.
  *
@@ -24,4 +26,5 @@ package tools.aqua.stars.data.av.dataclasses
  * @property yaw The yaw.
  * @property roll The roll.
  */
+@DLConvertible
 data class Rotation(val pitch: Double, val yaw: Double, val roll: Double)

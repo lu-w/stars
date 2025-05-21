@@ -17,6 +17,7 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+import DLConvertible
 import tools.aqua.stars.core.types.TickDataType
 
 /**

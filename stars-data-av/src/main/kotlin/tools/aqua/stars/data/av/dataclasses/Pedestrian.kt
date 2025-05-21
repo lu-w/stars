@@ -17,6 +17,8 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+import DLConvertible
+
 /**
  * Data class for pedestrians.
  *
@@ -25,6 +27,7 @@ package tools.aqua.stars.data.av.dataclasses
  * @property positionOnLane The [Pedestrian]'s position on the [Lane].
  * @property lane The [Pedestrian]'s [Lane].
  */
+@DLConvertible
 data class Pedestrian(
     override val id: Int,
     override val tickData: TickData,

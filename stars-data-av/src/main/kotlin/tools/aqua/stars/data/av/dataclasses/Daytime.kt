@@ -17,6 +17,8 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+import DLConvertible
+
 /** Enum for the current daytime. */
 enum class Daytime {
   Noon,

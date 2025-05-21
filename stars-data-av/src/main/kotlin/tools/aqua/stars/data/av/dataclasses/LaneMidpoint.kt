@@ -17,6 +17,8 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+import DLConvertible
+
 /**
  * Data class for [Lane] midpoints.
  *
@@ -24,6 +26,7 @@ package tools.aqua.stars.data.av.dataclasses
  * @property location The [Location] of the midpoint.
  * @property rotation The [Rotation] of the midpoint.
  */
+@DLConvertible
 data class LaneMidpoint(
     val distanceToStart: Double,
     val location: Location,

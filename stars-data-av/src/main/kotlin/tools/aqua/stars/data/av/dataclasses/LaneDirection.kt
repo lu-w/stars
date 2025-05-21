@@ -17,7 +17,10 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+import DLConvertible
+
 /** Enum for [Lane] directions. */
+@DLConvertible
 enum class LaneDirection {
   STRAIGHT,
   LEFT_TURN,

@@ -84,7 +84,7 @@ private fun objectId(obj: Any): String {
     @Suppress("UNCHECKED_CAST")
     (clazz.memberProperties.first { it.name == "id" } as KProperty1<Any, *>).get(obj)?.toString()
   } catch (e: Exception) {
-    System.identityHashCode(obj).toString()
+    obj.hashCode()
   }
   return "${clazz.simpleName}_$id"
 }
