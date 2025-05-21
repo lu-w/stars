@@ -1,7 +1,3 @@
-package tools.aqua.stars.logic.mtcq
-
-import openllet.core.KnowledgeBase
-
-interface DLConvertible {
-    fun addToKB(kb: KnowledgeBase)
-}
+@Target(AnnotationTarget.CLASS)
+@Retention(AnnotationRetention.RUNTIME)
+annotation class DLConvertible

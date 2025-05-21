@@ -19,10 +19,7 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
-import openllet.core.KnowledgeBase
-import openllet.core.utils.TermFactory.literal
-import openllet.core.utils.TermFactory.term
-import tools.aqua.stars.logic.mtcq.DLConvertible
+import DLConvertible
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -43,6 +40,7 @@ import kotlin.math.sqrt
  * @property acceleration The current acceleration m/s².
  * @property angularVelocity The current angular velocity.
  */
+@DLConvertible
 data class Vehicle(
   override val id: Int,
   override val tickData: TickData,
@@ -57,7 +55,7 @@ data class Vehicle(
   var velocity: Vector3D,
   var acceleration: Vector3D,
   val angularVelocity: Vector3D,
-) : DLConvertible, Actor() {
+) : Actor() {
 
   /** Whether the vehicle is of [VehicleType.BICYCLE]. */
   val isBicycle: Boolean
@@ -115,18 +113,5 @@ data class Vehicle(
           lane.road.id == other.lane.road.id
     }
     return super.equals(other)
-  }
-
-  override fun addToKB(kb: KnowledgeBase) {
-    val veh = term("Vehicle")
-    kb.addClass(veh)
-    val pos = term("positionOnLane")
-    kb.addDatatypeProperty(pos)
-    val ind = term("Vehicle_" + id)
-    kb.addIndividual(ind)
-    kb.addType(ind, veh)
-    kb.addPropertyValue(pos, ind, literal(positionOnLane))
-
-    // road? .lane.road?
   }
 }

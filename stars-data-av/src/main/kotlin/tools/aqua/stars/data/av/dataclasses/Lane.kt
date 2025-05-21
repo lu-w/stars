@@ -17,6 +17,8 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
+import DLConvertible
+
 /**
  * Data class for lanes.
  *
@@ -38,6 +40,7 @@ package tools.aqua.stars.data.av.dataclasses
  * @property trafficLights List of [StaticTrafficLight]s on this [Lane].
  * @property laneDirection The [LaneDirection] of this [Lane].
  */
+@DLConvertible
 data class Lane(
     val laneId: Int,
     var road: Road,

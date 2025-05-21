@@ -17,14 +17,13 @@
 
 package tools.aqua.stars.data.av.dataclasses
 
-import openllet.core.KnowledgeBase
-import openllet.core.utils.TermFactory.term
+import DLConvertible
 import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.logic.mtcq.DLConvertible
 
 /** Abstract actor data class. */
+@DLConvertible
 sealed class Actor :
-    DLConvertible, EntityType<Actor, TickData, Segment, TickDataUnitSeconds, TickDataDifferenceSeconds> {
+    EntityType<Actor, TickData, Segment, TickDataUnitSeconds, TickDataDifferenceSeconds> {
 
   /**
    * Clones the actor.
@@ -32,8 +31,4 @@ sealed class Actor :
    * @param newTickData New [TickData] to copy to new object.
    */
   abstract fun clone(newTickData: TickData): Actor
-
-  override fun addToKB(kb: KnowledgeBase) {
-    kb.addIndividual(term("Actor_" + id))
-  }
 }
