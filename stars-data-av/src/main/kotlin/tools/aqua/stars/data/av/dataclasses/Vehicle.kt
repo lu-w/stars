@@ -44,19 +44,19 @@ import kotlin.math.sqrt
  * @property angularVelocity The current angular velocity.
  */
 data class Vehicle(
-    override val id: Int,
-    override val tickData: TickData,
-    var positionOnLane: Double,
-    var lane: Lane,
-    val typeId: String,
-    val vehicleType: VehicleType,
-    var isEgo: Boolean,
-    val location: Location,
-    val forwardVector: Vector3D,
-    val rotation: Rotation,
-    var velocity: Vector3D,
-    var acceleration: Vector3D,
-    val angularVelocity: Vector3D,
+  override val id: Int,
+  override val tickData: TickData,
+  var positionOnLane: Double,
+  var lane: Lane,
+  val typeId: String,
+  val vehicleType: VehicleType,
+  var isEgo: Boolean,
+  val location: Location,
+  val forwardVector: Vector3D,
+  val rotation: Rotation,
+  var velocity: Vector3D,
+  var acceleration: Vector3D,
+  val angularVelocity: Vector3D,
 ) : DLConvertible, Actor() {
 
   /** Whether the vehicle is of [VehicleType.BICYCLE]. */
@@ -82,28 +82,29 @@ data class Vehicle(
   /** SpeedLimit of the road/lane for the current location of this [Vehicle]. */
   val applicableSpeedLimit: SpeedLimit?
     get() =
-        this.lane.speedLimits.firstOrNull { speedLimit ->
-          this.positionOnLane in (speedLimit.fromDistanceFromStart..speedLimit.toDistanceFromStart)
-        }
+      this.lane.speedLimits.firstOrNull { speedLimit ->
+        this.positionOnLane in (speedLimit.fromDistanceFromStart..speedLimit.toDistanceFromStart)
+      }
 
   override fun clone(newTickData: TickData): Actor =
-      Vehicle(
-          id,
-          newTickData,
-          positionOnLane,
-          lane,
-          typeId,
-          vehicleType,
-          isEgo,
-          location,
-          forwardVector,
-          rotation,
-          velocity,
-          acceleration,
-          angularVelocity)
+    Vehicle(
+      id,
+      newTickData,
+      positionOnLane,
+      lane,
+      typeId,
+      vehicleType,
+      isEgo,
+      location,
+      forwardVector,
+      rotation,
+      velocity,
+      acceleration,
+      angularVelocity
+    )
 
   override fun toString(): String =
-      "Vehicle(id=$id, tickData=${tickData}, positionOnLane=$positionOnLane, lane=${lane.laneId}, road=${lane.road.id})"
+    "Vehicle(id=$id, tickData=${tickData}, positionOnLane=$positionOnLane, lane=${lane.laneId}, road=${lane.road.id})"
 
   override fun equals(other: Any?): Boolean {
     if (other is Vehicle) {
@@ -125,5 +126,7 @@ data class Vehicle(
     kb.addIndividual(ind)
     kb.addType(ind, veh)
     kb.addPropertyValue(pos, ind, literal(positionOnLane))
+
+    // road? .lane.road?
   }
 }

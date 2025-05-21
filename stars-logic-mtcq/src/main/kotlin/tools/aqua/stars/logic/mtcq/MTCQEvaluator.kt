@@ -11,6 +11,8 @@ import tools.aqua.stars.core.types.SegmentType
 import tools.aqua.stars.core.types.TickDataType
 import tools.aqua.stars.core.types.TickDifference
 import tools.aqua.stars.core.types.TickUnit
+import kotlin.reflect.KClass
+import kotlin.reflect.full.memberProperties
 
 class MTCQEvaluator<
     E : EntityType<E, T, S, U, D>,
@@ -19,38 +21,55 @@ class MTCQEvaluator<
     U : TickUnit<U, D>,
     D : TickDifference<D>> {
 
-    private val tkbCache = mutableMapOf<S, TemporalKnowledgeBase>()
+  // Only stores the last TKB to save memory
+  private val lastTkbCache = mutableMapOf<S, TemporalKnowledgeBase>()
 
-    fun eval(segment: S, mtcqString: String): QueryResult {
-        val tkb = toTKB(segment)
-        val mtcq = MetricTemporalConjunctiveQueryParser.parse(mtcqString, tkb)
-        println("MTCQ evaluation called for TKB of size " + tkb.size)
-        val eng = MTCQNormalFormEngine()
-        val res = eng.exec(mtcq)
-        println("Result is: $res")
-        return res
+  fun eval(segment: S, mtcqString: String): QueryResult {
+    val tkb = toTKB(segment)
+    val mtcq = MetricTemporalConjunctiveQueryParser.parse(mtcqString, tkb)
+    println("MTCQ evaluation called for TKB of size " + tkb.size)
+    val eng = MTCQNormalFormEngine()
+    val res = eng.exec(mtcq)
+    println("Result is: $res")
+    return res
+  }
+
+  private fun toTKB(segment: S): TemporalKnowledgeBase {
+    lastTkbCache[segment]?.let {
+      return it
     }
 
-    private fun toTKB(segment: S): TemporalKnowledgeBase {
-        tkbCache[segment]?.let {
-            return it
-        }
+    // New segment - clear cache
+    lastTkbCache.clear()
 
-        val tkb = InMemoryTemporalKnowledgeBaseImpl()
-        segment.tickData.forEach {
-            println("Initializing TKB for tick " + it.currentTick)
-            val kb = KnowledgeBaseImpl()
-            // TODO dont do conversion when checking if formula holds - we might check N formulae
-            it.entities.forEach {
-                if (it is DLConvertible)
-                    it.addToKB(kb)
-            }
-            // TODO
-            // this misses some other members of it (weather, daytime, trafficLights)
-            tkb.add(kb)
-        }
+    val tkb = InMemoryTemporalKnowledgeBaseImpl()
+    segment.tickData.forEach { tick ->
+      println("Initializing TKB for tick " + tick.currentTick)
+      val kb = KnowledgeBaseImpl()
+      tick.entities.forEach { entity ->
+        if (entity is DLConvertible)
+          entity.addToKB(kb)
+      }
 
-        tkbCache[segment] = tkb
-        return tkb
+      for (prop in (tick::class as KClass<T>).memberProperties) {
+        if (prop.name == "entities")
+          break
+        val data = prop.get(tick)
+        if (data is Iterable<*>)
+          data.forEach { entity ->
+            if (entity is DLConvertible)
+              entity.addToKB(kb)
+          }
+        if (data is DLConvertible)
+          data.addToKB(kb)
+      }
+
+      // TODO this misses some other members of it (e.g., weather, daytime, trafficLights)
+      // could be solved be reflection to check if some other property is DLConvertible
+      tkb.add(kb)
     }
+
+    lastTkbCache[segment] = tkb
+    return tkb
+  }
 }

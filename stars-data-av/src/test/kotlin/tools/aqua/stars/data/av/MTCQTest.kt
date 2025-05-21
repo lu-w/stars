@@ -65,7 +65,7 @@ class MTCQTest {
     val mtcqEval = MTCQEvaluator<Actor, TickDataUnitSeconds, Segment, TickDataUnitSeconds, TickDataDifferenceSeconds>()
 
     val testMtcqPred =
-      predicate(Vehicle::class) { ctx, v ->
+      predicate(Vehicle::class) { ctx, _ ->
         mtcq(ctx, "G(Vehicle(?x))", mtcqEval)
       }
 

@@ -20,11 +20,13 @@ plugins { id("tools.aqua.stars.library-conventions") }
 mavenMetadata {
   name.set("STARS Kotlin MTCQ")
   description.set(
-      "STARS - Scenario-Based Testing of Autonomous Robotic Systems - Library for Kotlin implementation of MTCQ")
+    "STARS - Scenario-Based Testing of Autonomous Robotic Systems - Library for Kotlin implementation of MTCQ"
+  )
 }
 
 dependencies {
   implementation(project(":stars-core"))
   implementation(files("lib/openllet-distribution-2.6.6-SNAPSHOT.jar"))
   implementation("javax.xml.bind:jaxb-api:2.3.1")
+  implementation("org.jetbrains.kotlin:kotlin-reflect")
 }
