@@ -8,31 +8,36 @@ import openllet.core.utils.TermFactory.literal
 import kotlin.reflect.full.*
 import kotlin.reflect.KProperty1
 
-fun Any.addToKB(kb: KnowledgeBase, visited: MutableSet<Any> = mutableSetOf()) {
+/**
+ * Adds an object that has an @DLConvertible annotation to the given knowledge base using some fancy magic (it simply
+ * iterates over all its properties and recursively adds those to the knowledge base as well).
+ * prefix: An optional prefix to add in front of any created class, individual, and property.
+ */
+fun Any.addToKB(kb: KnowledgeBase, prefix: String = "", visited: MutableSet<Any> = mutableSetOf()) {
   // Only process objects marked with @ToKnowledgeBase
   val clazz = this::class
   if (!clazz.hasAnnotation<DLConvertible>()) return
   if (this in visited) return
   visited += this
 
-  val className = clazz.simpleName ?: "Anonymous"
+  val className = join(prefix, clazz.simpleName ?: "Anonymous")
   val classTerm = term(className)
   kb.addClass(classTerm)
 
-  val ind = term(objectId(this))
+  val ind = term(join(prefix, objectId(this)))
   kb.addIndividual(ind)
   kb.addType(ind, classTerm)
 
   for (prop in clazz.memberProperties) {
     val value = (prop as KProperty1<Any, *>).get(this) ?: continue
-    val propTerm = term(prop.name)
+    val propTerm = term(join(prefix, prop.name))
 
     when (value) {
       is Iterable<*> -> value.forEach { item ->
         if (item is String || item is Number || item is Boolean)
           addDataProperty(kb, propTerm, ind, item)
         else if (item != null && item::class.hasAnnotation<DLConvertible>())
-          addObjectProperty(kb, visited, propTerm, ind, item)
+          addObjectProperty(kb, prefix, visited, propTerm, ind, item)
       }
 
       is String, is Number, is Boolean ->
@@ -40,21 +45,22 @@ fun Any.addToKB(kb: KnowledgeBase, visited: MutableSet<Any> = mutableSetOf()) {
 
       else ->
         if (value::class.hasAnnotation<DLConvertible>())
-          addObjectProperty(kb, visited, propTerm, ind, value)
+          addObjectProperty(kb, prefix, visited, propTerm, ind, value)
     }
   }
 }
 
 private fun addObjectProperty(
   kb: KnowledgeBase,
+  prefix: String,
   visited: MutableSet<Any>,
   propTerm: ATermAppl,
   subj: ATermAppl,
   obj: Any
 ) {
-  obj.addToKB(kb, visited)
+  obj.addToKB(kb, prefix, visited)
   kb.addObjectProperty(propTerm)
-  kb.addPropertyValue(propTerm, subj, term(objectId(obj)))
+  kb.addPropertyValue(propTerm, subj, term(join(prefix, objectId(obj))))
 }
 
 private fun addDataProperty(
@@ -87,4 +93,8 @@ private fun objectId(obj: Any): String {
     obj.hashCode()
   }
   return "${clazz.simpleName}_$id"
+}
+
+private fun join(prefix: String, entity: String): String {
+  return "$prefix#$entity"
 }

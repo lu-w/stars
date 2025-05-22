@@ -1,20 +1,22 @@
 package tools.aqua.stars.logic.mtcq
 
 import DLConvertible
+import openllet.core.KnowledgeBase
 import openllet.core.KnowledgeBaseImpl
 import openllet.mtcq.engine.MTCQNormalFormEngine
 import openllet.mtcq.model.kb.InMemoryTemporalKnowledgeBaseImpl
 import openllet.mtcq.model.kb.TemporalKnowledgeBase
 import openllet.mtcq.parser.MetricTemporalConjunctiveQueryParser
+import openllet.owlapi.OpenlletReasonerFactory
 import openllet.query.sparqldl.model.results.QueryResult
-import tools.aqua.stars.core.types.EntityType
-import tools.aqua.stars.core.types.SegmentType
-import tools.aqua.stars.core.types.TickDataType
-import tools.aqua.stars.core.types.TickDifference
-import tools.aqua.stars.core.types.TickUnit
+import tools.aqua.stars.core.types.*
+import java.io.File
 import kotlin.reflect.KClass
 import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.memberProperties
+import org.semanticweb.owlapi.apibinding.OWLManager
+import kotlin.jvm.optionals.getOrNull
+
 
 class MTCQEvaluator<
     E : EntityType<E, T, S, U, D>,
@@ -23,8 +25,21 @@ class MTCQEvaluator<
     U : TickUnit<U, D>,
     D : TickDifference<D>> {
 
+  // Global ontology (TBox) loaded from file (optional)
+  var ontology: KnowledgeBase? = null
+  var prefix: String = ""
+
   // Cache, only stores the last TKB to save memory
   private val lastTkbCache = mutableMapOf<S, TemporalKnowledgeBase>()
+
+  fun setOntology(ontologyFile: File) {
+    require(ontologyFile.exists()) { "Ontology file does not exist: $ontologyFile" }
+    val man = OWLManager.createOWLOntologyManager()
+    val ont = man.loadOntologyFromOntologyDocument(ontologyFile)
+    val reasoner = OpenlletReasonerFactory.getInstance().createReasoner(ont)
+    ontology = reasoner.kb
+    prefix = if (ont.ontologyID.ontologyIRI != null) ont.ontologyID.ontologyIRI.getOrNull()!!.iriString else ""
+  }
 
   fun eval(segment: S, mtcqString: String): QueryResult {
     val tkb = toTKB(segment)
@@ -47,16 +62,19 @@ class MTCQEvaluator<
     val tkb = InMemoryTemporalKnowledgeBaseImpl()
     segment.tickData.forEach { tick ->
       println("Initializing TKB for tick " + tick.currentTick)
-      val kb = KnowledgeBaseImpl()
+      val kb = when (ontology) {
+        null -> KnowledgeBaseImpl()
+        else -> ontology!!.copy()
+      }
       for (prop in (tick::class as KClass<T>).memberProperties) {
         val data = prop.get(tick)
         if (data is Iterable<*>)
           data.forEach { entity ->
             if (entity != null && entity::class.hasAnnotation<DLConvertible>())
-              entity.addToKB(kb)
+              entity.addToKB(kb, prefix)
           }
         if (data != null && data::class.hasAnnotation<DLConvertible>())
-          data.addToKB(kb)
+          data.addToKB(kb, prefix)
       }
       tkb.add(kb)
     }

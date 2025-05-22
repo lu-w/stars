@@ -26,6 +26,7 @@ import tools.aqua.stars.core.tsc.builder.tsc
 import tools.aqua.stars.data.av.dataclasses.*
 import tools.aqua.stars.logic.mtcq.MTCQEvaluator
 import tools.aqua.stars.logic.mtcq.mtcq
+import java.io.File
 
 
 class MTCQTest {
@@ -63,10 +64,11 @@ class MTCQTest {
       }
 
     val mtcqEval = MTCQEvaluator<Actor, TickDataUnitSeconds, Segment, TickDataUnitSeconds, TickDataDifferenceSeconds>()
+    mtcqEval.setOntology(File((MTCQEvaluator::class.java.getResource("/mtcqOntology.rdf")!!).toURI()))
 
     val testMtcqPred =
       predicate(Vehicle::class) { ctx, _ ->
-        mtcq(ctx, "G(Vehicle(?x))", mtcqEval)
+        mtcq(ctx, "G(http://dlr.de/stars/mtcqTestOntology#MovableObject(?x))", mtcqEval)
       }
 
     val myTsc = tsc<Actor, TickData, Segment, TickDataUnitSeconds, TickDataDifferenceSeconds> {
