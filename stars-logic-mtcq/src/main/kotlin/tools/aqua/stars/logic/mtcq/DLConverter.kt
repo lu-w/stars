@@ -20,17 +20,17 @@ fun Any.addToKB(kb: KnowledgeBase, prefix: String = "", visited: MutableSet<Any>
   if (this in visited) return
   visited += this
 
-  val className = join(prefix, clazz.simpleName ?: "Anonymous")
+  val className = prefix + (clazz.simpleName ?: "Anonymous")
   val classTerm = term(className)
   kb.addClass(classTerm)
 
-  val ind = term(join(prefix, objectId(this)))
+  val ind = term(prefix + objectId(this))
   kb.addIndividual(ind)
   kb.addType(ind, classTerm)
 
   for (prop in clazz.memberProperties) {
     val value = (prop as KProperty1<Any, *>).get(this) ?: continue
-    val propTerm = term(join(prefix, prop.name))
+    val propTerm = term(prefix + prop.name)
 
     when (value) {
       is Iterable<*> -> value.forEach { item ->
@@ -60,7 +60,7 @@ private fun addObjectProperty(
 ) {
   obj.addToKB(kb, prefix, visited)
   kb.addObjectProperty(propTerm)
-  kb.addPropertyValue(propTerm, subj, term(join(prefix, objectId(obj))))
+  kb.addPropertyValue(propTerm, subj, term(prefix + objectId(obj)))
 }
 
 private fun addDataProperty(
@@ -93,8 +93,4 @@ private fun objectId(obj: Any): String {
     obj.hashCode()
   }
   return "${clazz.simpleName}_$id"
-}
-
-private fun join(prefix: String, entity: String): String {
-  return "$prefix#$entity"
 }

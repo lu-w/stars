@@ -49,8 +49,12 @@ class MTCQTest {
     val tickData3 =
       emptyTickData(currentTick = TickDataUnitSeconds(0.2), actors = listOf(changedVehicle21, changedVehicle22))
 
+    val changedVehicle31 = emptyVehicle(id = 0, egoVehicle = true, positionOnLane = 1.1)
+    val changedVehicle32 = emptyVehicle(id = 1, egoVehicle = false, positionOnLane = 1.2, lane = emptyLane(laneId = 2))
+    val tickData4 = emptyTickData(currentTick = TickDataUnitSeconds(0.3), actors = listOf(changedVehicle31, changedVehicle32))
+
     val segment =
-      Segment(segmentSource = "", mainInitList = listOf(tickData1, tickData2, tickData3), simulationRunId = "1")
+      Segment(segmentSource = "", mainInitList = listOf(tickData1, tickData2, tickData3, tickData4), simulationRunId = "1")
 
     val soBetween =
       predicate(Vehicle::class to Vehicle::class) { _, v0, v1 ->
@@ -64,11 +68,13 @@ class MTCQTest {
       }
 
     val mtcqEval = MTCQEvaluator<Actor, TickDataUnitSeconds, Segment, TickDataUnitSeconds, TickDataDifferenceSeconds>()
-    mtcqEval.setOntology(File((MTCQEvaluator::class.java.getResource("/mtcqOntology.rdf")!!).toURI()))
+    mtcqEval.loadOntology(File((MTCQEvaluator::class.java.getResource("/mtcqOntology.rdf")!!).toURI()))
 
     val testMtcqPred =
       predicate(Vehicle::class) { ctx, _ ->
-        mtcq(ctx, "G(http://dlr.de/stars/mtcqTestOntology#MovableObject(?x))", mtcqEval)
+        mtcq(ctx,
+          "G(http://dlr.de/stars/mtcqTestOntology#MovableObject(?x) & http://dlr.de/stars/mtcqTestOntology#lane(?x,?y))",
+          mtcqEval)
       }
 
     val myTsc = tsc<Actor, TickData, Segment, TickDataUnitSeconds, TickDataDifferenceSeconds> {
@@ -80,7 +86,7 @@ class MTCQTest {
             }
           }
         }
-        leaf("test mtcq") { condition { ctx -> testMtcqPred.holds(ctx) } }
+        leaf("movable object always on same lane") { condition { ctx -> testMtcqPred.holds(ctx) } }
       }
     }
 
